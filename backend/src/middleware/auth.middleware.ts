@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { verifyJwt } from "../utils/jwt";
 
 interface CustomRequest extends Request {
-  user?: any; // or you can specify the type of user if you know it
+  user?: any;
 }
 
 export const authMiddleware = (

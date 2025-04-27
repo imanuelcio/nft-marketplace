@@ -8,7 +8,7 @@ export const wagmiConfig = createConfig({
   chains: [sepolia],
   connectors: [injected()],
   transports: {
-    [sepolia.id]: http("sepolia.infura.io"),
+    [sepolia.id]: http(),
   },
   ssr: true,
 });

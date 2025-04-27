@@ -5,12 +5,18 @@ import { connectToDb } from "./database/connection";
 import { errorHandle } from "./middleware/error.middleware";
 import authRouter from "./routes/auth.routes";
 import cors from "cors";
-import { corsOptions } from "./cors/cors";
 import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config();
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use("/api", authRouter);
 app.use(cookieParser());

@@ -3,6 +3,6 @@ import { getNonce, verifySignature } from "../controllers/auth/auth.controller";
 
 const authRouter = Router();
 
-authRouter.get("/nonce/:walletAddress", getNonce);
-authRouter.post("/verify", verifySignature);
+authRouter.get("/auth/nonce/:walletAddress", getNonce);
+authRouter.post("/auth/verify", verifySignature);
 export default authRouter;

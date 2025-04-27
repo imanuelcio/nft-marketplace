@@ -7,7 +7,8 @@ export const getNonce = async (
 ) => {
   try {
     const { walletAddress } = req.params;
-    const result = authService.getNonce(walletAddress);
+    const result = await authService.getNonce(walletAddress);
+    console.log(result);
     res.json(result);
   } catch (error) {
     next(error);

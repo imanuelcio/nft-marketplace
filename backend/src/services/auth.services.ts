@@ -25,14 +25,14 @@ export const verifySignature = async (
     throw new Error("User not found");
   }
 
-  const messageNonce = `Welcome to our app! Login nonce: ${user.nonce}`;
+  const messageNonce = `Login nonce: ${user.nonce}`;
 
   const recoveredAddress = ethers.verifyMessage(messageNonce, signature);
 
   if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
     throw new Error("Signature verification failed");
   }
-  user.nonce = randomBytes(16).toString("hex"); // Setelah berhasil verify, update nonce
+  user.nonce = randomBytes(16).toString("hex");
   await user.save();
   const token = signJwt({
     walletAddress: walletAddress.toLowerCase(),
