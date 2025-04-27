@@ -25,10 +25,10 @@ export const verifySignature = async (
     throw new Error("User not found");
   }
 
-  const messageNonce = `Login nonce: ${user.nonce}`;
+  const messageNonce = `Login nonce ${user.nonce}`;
 
   const recoveredAddress = ethers.verifyMessage(messageNonce, signature);
-
+  console.log(recoveredAddress);
   if (recoveredAddress.toLowerCase() !== walletAddress.toLowerCase()) {
     throw new Error("Signature verification failed");
   }

@@ -40,3 +40,16 @@ export const verifySignature = async (
     next(error);
   }
 };
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie("token");
+    res.json({ success: true, message: "Logout success" });
+  } catch (error) {
+    next(error);
+  }
+};

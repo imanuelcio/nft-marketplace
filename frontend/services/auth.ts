@@ -103,6 +103,9 @@ export const useAuthService = () => {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       try {
+        console.log("Deleting cookie....");
+        await axiosInstance.post("/auth/logout");
+        console.log("Successfully deleted cookie");
         console.log("Disconnecting wallet");
         await disconnectAsync();
         console.log("Wallet disconnected successfully");
