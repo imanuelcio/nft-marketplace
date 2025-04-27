@@ -15,14 +15,21 @@ const LoginSection = () => {
   };
 
   return (
-    <div>
-      {isConnected ? (
-        <button onClick={handleLogin} disabled={isLoading}>
-          {isLoading ? "Loading..." : "Login with Wallet"}
-        </button>
-      ) : (
-        <p>Connect your wallet first!</p>
-      )}
+    <div className="flex flex-col gap-4">
+      <button
+        onClick={handleLogin}
+        disabled={isLoading || !isConnected}
+        className="px-4 py-2 bg-blue-500 text-white cursor-pointer rounded disabled:opacity-50"
+      >
+        {isConnected
+          ? isLoading
+            ? "Signing..."
+            : "Login"
+          : "Connect your wallet first!"}
+      </button>
+      <button className="px-4 py-2 bg-blue-500 text-white cursor-pointer rounded disabled:opacity-50">
+        Connect Wallet
+      </button>
     </div>
   );
 };

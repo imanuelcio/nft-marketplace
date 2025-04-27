@@ -31,7 +31,7 @@ export const verifySignature = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // hanya HTTPS kalau production
       sameSite: "strict",
-      maxAge: 24 * 60 * 60 * 1000, // 1 hari jir
+      maxAge: 24 * 60 * 60 * 1000, // 1 hari
     });
 
     res.json({ success: true, message: "Login success" });

@@ -6,12 +6,14 @@ import { errorHandle } from "./middleware/error.middleware";
 import authRouter from "./routes/auth.routes";
 import cors from "cors";
 import { corsOptions } from "./cors/cors";
+import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config();
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api", authRouter);
+app.use(cookieParser());
 app.use(errorHandle);
 
 app.get("/", (req: Request, res: Response) => {

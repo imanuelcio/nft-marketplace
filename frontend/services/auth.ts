@@ -11,7 +11,7 @@ export const authService = () => {
     mutationFn: async () => {
       if (!address) throw new Error("Wallet not found");
 
-      const nonceres = await axiosInstance(`/auth/nonce/${address}`);
+      const nonceres = await axiosInstance.get(`/auth/nonce/${address}`);
       const nonce = nonceres.data.nonce;
 
       const signature = await signMessageAsync({

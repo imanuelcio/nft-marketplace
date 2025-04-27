@@ -6,6 +6,6 @@ export const signJwt = (payload: object) => {
   return jwt.sign(payload, secret, { expiresIn: "1d" });
 };
 
-export const verifyJwt = (token: string, secret: string) => {
+export const verifyJwt = (token: string) => {
   return jwt.verify(token, secret);
 };
