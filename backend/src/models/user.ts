@@ -14,8 +14,8 @@ const UserSchema = new Schema<IUser>(
   {
     walletAddress: { type: String, required: true, unique: true },
     nonce: { type: String, required: true },
-    username: { type: String },
-    email: { type: String },
+    username: { type: String, default: "" },
+    email: { type: String, default: "" },
     emailVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
