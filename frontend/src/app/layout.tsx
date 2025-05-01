@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { WagmiProvider } from "wagmi";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { wagmiConfig } from "../../config/wagmi";
 import "./globals.css";
 import { Providers } from "../../components/Provider";
 import Head from "next/head";
@@ -21,7 +18,6 @@ export const metadata: Metadata = {
   title: "Cio NFT Marketplace",
   description: "Soon be a NFT Marketplace",
 };
-const queryClient = new QueryClient();
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Head>
-        <title>NFT Nexus | Discover, Collect, Trade Digital Art</title>
+        <title>NFT Ciao | Discover, Collect, Trade Digital Art</title>
         <meta
           name="description"
           content="Explore and collect rare digital art and NFTs"

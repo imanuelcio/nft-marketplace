@@ -26,7 +26,7 @@ export default function HomeSection() {
           name: "Cosmic Dreamers #4391",
           creator: "0xArtist",
           price: "1.45 ETH",
-          image: "/api/placeholder/350/350",
+          image: "/images/nft.jpg",
           likes: 245,
           timeLeft: "2h 51m",
         },
@@ -35,7 +35,7 @@ export default function HomeSection() {
           name: "Digital Wanderers #112",
           creator: "MetaArtLabs",
           price: "0.89 ETH",
-          image: "/api/placeholder/350/350",
+          image: "/images/nft.jpg",
           likes: 189,
           timeLeft: "5h 23m",
         },
@@ -44,7 +44,7 @@ export default function HomeSection() {
           name: "Neon Genesis #78",
           creator: "CryptoVisionary",
           price: "2.13 ETH",
-          image: "/api/placeholder/350/350",
+          image: "/images/nft.jpg",
           likes: 312,
           timeLeft: "1h 12m",
         },
@@ -53,7 +53,7 @@ export default function HomeSection() {
           name: "Abstract Realms #215",
           creator: "DigitalCanvas",
           price: "3.21 ETH",
-          image: "/api/placeholder/350/350",
+          image: "/images/nft.jpg",
           likes: 178,
           timeLeft: "8h 45m",
         },
@@ -63,7 +63,7 @@ export default function HomeSection() {
         name: "Parallel Universe Collection",
         creator: "NebulaCreator",
         price: "5.85 ETH",
-        image: "/api/placeholder/600/400",
+        image: "/images/nft.jpg",
         description:
           "A stunning collection exploring alternate realities and dimensional shifts through vibrant digital art. Each piece offers a window into worlds beyond our comprehension.",
         itemsCount: 15,
@@ -109,7 +109,7 @@ export default function HomeSection() {
               NFTs
             </motion.h1>
             <p className="text-gray-300 text-lg mb-8 md:pr-12">
-              NFT Nexus is the premier marketplace for non-fungible tokens.
+              NFT Ciao is the premier marketplace for non-fungible tokens.
               Explore, collect, and trade digital art with confidence.
             </p>
 
@@ -146,7 +146,7 @@ export default function HomeSection() {
             >
               <div className="relative h-80 w-full md:h-96 md:w-96 mx-auto">
                 <Image
-                  src="/api/placeholder/600/600"
+                  src="/images/nft.jpg"
                   alt="Featured NFT"
                   className="rounded-xl object-cover"
                   layout="fill"

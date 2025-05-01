@@ -1,7 +1,7 @@
 import React from "react";
-import HomeSection from "../components/HomeSection";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../screen/Navbar";
+import HomeSection from "../screen/HomeSection";
+import Footer from "../screen/Footer";
 
 const HomeLayout = () => {
   return (
