@@ -1,15 +1,14 @@
 import React from "react";
 import HomeSection from "../components/HomeSection";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const HomeLayout = () => {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <HomeSection />
-      </main>
-      {/* <footer className="row-start-3 flex gap-[24px] flex-wrap  items-center justify-center">
-        <h1>Footer</h1>
-      </footer> */}
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+      <Navbar />
+      <HomeSection />
+      <Footer />
     </div>
   );
 };
