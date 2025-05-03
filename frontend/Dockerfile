@@ -1,22 +1,18 @@
 # Build tahap
-FROM node:18 AS builder
+FROM node:18-alpine
 
-WORKDIR /app
-COPY . .
+RUN mkdir -p /src/app
+WORKDIR /src/app
+
 
 # Install dependencies dan build frontend
+COPY package*.json ./ /src/app/
+
 RUN npm install
+
+COPY . /src/app/
+
 RUN npm run build
-
-# Tahap production server
-FROM node:18 AS runner
-WORKDIR /app
-
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
-COPY --from=builder /app/package*.json ./
-
-RUN npm install --omit=dev
 
 # Expose port 3000 untuk frontend
 EXPOSE 3000

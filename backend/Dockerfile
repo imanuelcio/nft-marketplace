@@ -1,15 +1,15 @@
 # Gunakan image Node.js
-FROM node:18
+FROM node:18-alpine
 
 # Set work directory
 WORKDIR /
 
-# Copy semua file yang diperlukan
-COPY . .
+COPY package.json package-lock.json ./
 
+COPY . .
 # Install dependencies
 RUN npm install
 
 
 # Jalankan server
-CMD ["npm", "run", "dev"]
+CMD ["npm","run","start"]
