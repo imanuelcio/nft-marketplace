@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import config from "./config/config";
 import dotenv from "dotenv";
-import { connectToDb } from "./database/connection";
 import { errorHandle } from "./middleware/error.middleware";
 import authRouter from "./routes/auth.routes";
 import cors from "cors";
@@ -29,7 +28,6 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.listen(config.port, () => {
-  connectToDb();
+app.listen(config.port, async () => {
   console.log(`✳️  Server running on port ${config.port}`);
 });

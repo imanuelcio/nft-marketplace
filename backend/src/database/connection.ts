@@ -4,6 +4,6 @@ import config from "../config/config";
 dotenv.config();
 
 export const supabase = createClient(
-  config.supabase_url || "",
-  config.supabase_key || ""
+  config.supabase_url as string,
+  config.supabase_key as string
 );
