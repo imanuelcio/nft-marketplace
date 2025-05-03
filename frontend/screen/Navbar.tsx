@@ -3,17 +3,19 @@ import { useState } from "react";
 import { Search, User, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ConnectWallet from "../components/ConnectWallet";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const router = useRouter();
   const [searchFocus, setSearchFocus] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header className="container mx-auto px-4 py-6">
       <nav className="flex items-center justify-between ">
         <div className="flex items-center space-x-2">
           <motion.div
-            className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full flex items-center justify-center"
+            onClick={() => router.push("/")}
+            className="w-10 h-10 bg-gradient-to-r cursor-pointer from-purple-600 to-pink-500 rounded-full flex items-center justify-center"
             whileHover={{ scale: 1.05, rotate: 5 }}
             transition={{ duration: 0.2 }}
           >

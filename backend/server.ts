@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
-import config from "./config/config";
+import config from "./src/config/config";
 import dotenv from "dotenv";
-import { errorHandle } from "./middleware/error.middleware";
-import authRouter from "./routes/auth.routes";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import authRouter from "./src/routes/auth.routes";
+import profileRouter from "./src/routes/profile.routes";
+import { errorHandle } from "./src/middleware/error.middleware";
 const app = express();
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(
 );
 app.use(express.json());
 app.use("/api", authRouter);
+app.use("/api", profileRouter);
 app.use(cookieParser());
 app.use(errorHandle);
 

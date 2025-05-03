@@ -53,7 +53,7 @@ const LoginPage = () => {
           <div className="hidden md:flex items-center space-x-4">
             <button
               onClick={() => router.push("/profile")}
-              className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors relative"
+              className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors relative cursor-pointer"
             >
               <User size={20} />
             </button>
