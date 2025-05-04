@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import * as authService from "../../services/auth.services";
+import * as authService from "../services/auth.services";
 export const getNonce = async (
   req: Request,
   res: Response,

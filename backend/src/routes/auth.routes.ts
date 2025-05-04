@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
   getNonce,
-  verifySignature,
   logout,
-} from "../controllers/auth/auth.controller";
+  verifySignature,
+} from "../controllers/auth.controller";
 const authRouter = Router();
 
 authRouter.get("/auth/nonce/:walletAddress", getNonce);

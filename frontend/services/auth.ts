@@ -10,22 +10,6 @@ export const useAuthService = () => {
   const { disconnectAsync } = useDisconnect();
   const { signMessageAsync, isSuccess } = useSignMessage();
 
-  // const connectWalletMutation = useMutation({
-  //   mutationFn: async () => {
-  //     const injectedConnector = connectors.find(
-  //       (c) => c.id === "injected" || c.name.toLowerCase().includes("metamask")
-  //     );
-
-  //     if (!injectedConnector) {
-  //       throw new Error("No injected connector found (MetaMask or similar)");
-  //     }
-
-  //     const result = await connectAsync({ connector: injectedConnector });
-  //     console.log("Connected wallet successfully:", result);
-  //     return result;
-  //   },
-  // });
-
   const connectAndLoginMutation = useMutation({
     mutationFn: async () => {
       try {

@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
-import { supabase } from "../database/connection";
 import { ethers } from "ethers";
 import { signJwt } from "../utils/jwt";
+import supabase from "../database/connection";
 
 export const getNonce = async (walletAddress: string) => {
   const lowerWallet = walletAddress.toLowerCase();

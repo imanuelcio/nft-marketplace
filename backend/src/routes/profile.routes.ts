@@ -1,12 +1,12 @@
 import { Router } from "express";
-import {
-  getProfile,
-  updateProfile,
-} from "../controllers/profile/profile.controller";
+import { userController } from "../controllers/profile.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
+import {
+  profileParamsValidation,
+  profileUpdateValidation,
+} from "../middleware/validator.middleware";
 const profileRouter = Router();
 
-profileRouter.get("/profile/:walletAddress", getProfile);
-profileRouter.post("/update/profile", updateProfile);
-
+profileRouter.get("/user/:idOrWallet", userController.getUserProfile);
+profileRouter.put("/user/:id", userController.updateUserProfile);
 export default profileRouter;

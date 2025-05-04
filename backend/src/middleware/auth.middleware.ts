@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyJwt } from "../utils/jwt";
+import { StatusCodes } from "http-status-codes";
+import { AuthToken } from "../types/user.type";
 
 interface CustomRequest extends Request {
   user?: any;
@@ -11,18 +13,38 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      res.status(401).json({
-        error: "Unauthorized. Token not found",
+    if (!authHeader || authHeader.startsWith("bearer")) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Unauthorized token is missing",
+        error: "Unauthorized",
       });
     }
 
-    const payload = verifyJwt(token);
-    req.user = payload;
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Unauthorized token is missing",
+        error: "Unauthorized",
+      });
+    }
+
+    const decoded = verifyJwt(token) as AuthToken;
+
+    req.user = {
+      userId: decoded.userId,
+      walletAddress: decoded.walletAddress,
+    };
+
     next();
-  } catch (error) {
-    res.status(401).json({ error: "Unauthorized. Token invalid" });
+  } catch (error: any) {
+    res.status(StatusCodes.BAD_GATEWAY).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
   }
 };

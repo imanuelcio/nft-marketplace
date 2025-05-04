@@ -1,25 +1,77 @@
-import mongoose, { Document, Schema } from "mongoose";
+import supabase from "../database/connection";
+import { UserInput, User } from "../types/user.type";
 
-export interface IUser extends Document {
-  walletAddress: string;
-  nonce: string;
-  username?: string;
-  email?: string;
-  emailVerified?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export const userModel = {
+  async getAlluser(): Promise<User[]> {
+    const { data, error } = await supabase.from("users").select("*");
 
-const UserSchema = new Schema<IUser>(
-  {
-    walletAddress: { type: String, required: true, unique: true },
-    nonce: { type: String, required: true },
-    username: { type: String, default: "" },
-    email: { type: String, default: "" },
-    emailVerified: { type: Boolean, default: false },
+    if (error) throw new Error(error.message);
+    return data as User[];
   },
-  { timestamps: true }
-);
 
-const User = mongoose.model<IUser>("User", UserSchema);
-export default User;
+  async getuserByID(id: string): Promise<User> {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) {
+      if (error.code === "PGRST116") {
+        throw new Error("User not found");
+      }
+      throw new Error(error.message);
+    }
+
+    return data as User;
+  },
+
+  async getUserByWalletAddress(walletAddress: string): Promise<User> {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("wallet_address", walletAddress)
+      .single();
+    if (error) {
+      if (error.code === "PGRST116") {
+        throw new Error("User not found");
+      }
+      throw new Error(error.message);
+    }
+
+    return data as User;
+  },
+
+  async updateUserProfile(
+    id: string,
+    walletAddress: string,
+    userData: UserInput
+  ): Promise<User> {
+    const user = await this.getuserByID(id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.wallet_address !== walletAddress) {
+      throw new Error("Wallet address does match user ID");
+    }
+
+    const { data, error } = await supabase
+      .from("users")
+      .update({
+        ...userData,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error) {
+      throw new Error(
+        `Error updating profile for user with ID ${id}: ${error.message}`
+      );
+    }
+
+    return data as User;
+  },
+};
