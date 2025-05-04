@@ -25,6 +25,7 @@ export const userModel = {
     return data as User;
   },
 
+  // should return lowercase on req.params
   async getUserByWalletAddress(walletAddress: string): Promise<User> {
     const { data, error } = await supabase
       .from("users")
