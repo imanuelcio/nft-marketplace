@@ -12,7 +12,7 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  next();
+  next(); // Return void instead of Response
 };
 
 export const profileUpdateValidation = [
@@ -31,7 +31,7 @@ export const profileUpdateValidation = [
     .withMessage("Bio must be between 3 and 100 characters"),
   body("avatar_url").optional().isURL().withMessage("Must be valid URL"),
   body("banner_url").optional().isURL().withMessage("Must be valid URL"),
-  validate,
+  // validate,
 ];
 
 export const profileParamsValidation = [
@@ -40,5 +40,12 @@ export const profileParamsValidation = [
     .trim()
     .notEmpty()
     .withMessage("ID or wallet address is required"),
-  validate,
 ];
+
+export const validationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  validate(req, res, next);
+};

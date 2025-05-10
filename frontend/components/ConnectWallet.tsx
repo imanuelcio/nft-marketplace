@@ -220,7 +220,7 @@ const LoginPage = () => {
                   Community
                 </a>
                 <a
-                  href="#"
+                  href="/profile"
                   className="block py-2 text-lg text-gray-300 hover:text-purple-400 transition-colors"
                 >
                   My Profile

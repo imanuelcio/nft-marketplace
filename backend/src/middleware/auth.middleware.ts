@@ -11,25 +11,17 @@ export const authMiddleware = (
   req: CustomRequest,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies?.token;
 
-    if (!authHeader || authHeader.startsWith("bearer")) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: "Unauthorized token is missing",
-        error: "Unauthorized",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
     if (!token) {
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
-        message: "Unauthorized token is missing",
+        message: "Unauthorized: Token not found in cookies",
         error: "Unauthorized",
       });
+      return;
     }
 
     const decoded = verifyJwt(token) as AuthToken;
@@ -41,9 +33,9 @@ export const authMiddleware = (
 
     next();
   } catch (error: any) {
-    res.status(StatusCodes.BAD_GATEWAY).json({
+    res.status(StatusCodes.UNAUTHORIZED).json({
       success: false,
-      message: "Something went wrong",
+      message: "Invalid token",
       error: error.message,
     });
   }

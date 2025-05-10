@@ -8,18 +8,18 @@ import profileRouter from "./src/routes/profile.routes";
 const app = express();
 dotenv.config();
 
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
 app.use("/api", authRouter);
 app.use("/api", profileRouter);
-app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

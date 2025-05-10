@@ -18,6 +18,7 @@ export const ErrorHandler = (
         ? "Internal server error"
         : error.message,
   });
+  return;
 };
 
 export const notFoundHandler = (req: Request, res: Response): void => {
@@ -26,6 +27,7 @@ export const notFoundHandler = (req: Request, res: Response): void => {
     message: `Cant ${req.method} ${req.originalUrl}`,
     error: "Not found",
   });
+  return;
 };
 
 export const asyncHandler = (
