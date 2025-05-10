@@ -3,12 +3,20 @@ import { useState } from "react";
 import { Search, User, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ConnectWallet from "../components/ConnectWallet";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [searchFocus, setSearchFocus] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("all");
+
+  const isActive = (path: string) => {
+    if (path === "/" && pathname === "/") return true;
+    if (path !== "/" && pathname.startsWith(path)) return true;
+    return false;
+  };
+
   return (
     <header className="container mx-auto px-4 py-6">
       <nav className="flex items-center justify-between ">
@@ -25,42 +33,38 @@ const Navbar = () => {
         </div>
 
         <div className="hidden md:flex items-center space-x-8">
-          <a
-            href="#"
+          <Link
+            href="/explore"
             className={`hover:text-purple-400 transition-colors ${
-              activeCategory === "all" ? "text-purple-400" : ""
+              isActive("/explore") ? "text-purple-400" : ""
             }`}
-            onClick={() => setActiveCategory("all")}
           >
             Explore
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/collections"
             className={`hover:text-purple-400 transition-colors ${
-              activeCategory === "collections" ? "text-purple-400" : ""
+              isActive("/collections") ? "text-purple-400" : ""
             }`}
-            onClick={() => setActiveCategory("collections")}
           >
             Collections
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/artists"
             className={`hover:text-purple-400 transition-colors ${
-              activeCategory === "artists" ? "text-purple-400" : ""
+              isActive("/artists") ? "text-purple-400" : ""
             }`}
-            onClick={() => setActiveCategory("artists")}
           >
             Artists
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            href="/create"
             className={`hover:text-purple-400 transition-colors ${
-              activeCategory === "community" ? "text-purple-400" : ""
+              isActive("/create") ? "text-purple-400" : ""
             }`}
-            onClick={() => setActiveCategory("community")}
           >
-            Community
-          </a>
+            Create NFT
+          </Link>
         </div>
 
         <div className="hidden md:flex relative mx-4 flex-1 max-w-md">

@@ -2,12 +2,7 @@ import { axiosInstance } from "../libs/axios";
 import { useMutation } from "@tanstack/react-query";
 import { useAccount, useSignMessage } from "wagmi";
 import { toast } from "react-hot-toast";
-
-// Helper to detect MetaMask
-const isMetaMask = () => {
-  if (typeof window === "undefined") return false;
-  return window.ethereum?.isMetaMask || false;
-};
+import { useEffect } from "react";
 
 export const useAuthService = () => {
   const { address, isConnected } = useAccount();
@@ -23,7 +18,6 @@ export const useAuthService = () => {
         console.log("Starting authentication process...");
         console.log("Wallet address:", address);
         console.log("Is connected:", isConnected);
-        console.log("Is MetaMask:", isMetaMask());
         toast.loading("Authenticating...", { id: "auth" });
 
         // Step 1: Get nonce from backend
@@ -60,6 +54,9 @@ export const useAuthService = () => {
           console.log("Authentication successful:", verifyRes.data);
           toast.success("Authentication successful!", { id: "auth" });
 
+          //  set to session storage status login
+          sessionStorage.setItem("loginStatus", "true");
+
           return {
             walletAddress: address,
             authResult: verifyRes.data,
@@ -77,17 +74,7 @@ export const useAuthService = () => {
             throw new Error("Message signing was rejected by user");
           }
           if (signError.code === "UNSUPPORTED_OPERATION") {
-            if (isMetaMask()) {
-              throw new Error(
-                "MetaMask is having issues with message signing. Please try using a different wallet like OKX, or update your MetaMask settings to enable message signing."
-              );
-            }
-            throw new Error("Wallet does not support message signing");
-          }
-          if (isMetaMask() && signError.message?.includes("sign")) {
-            throw new Error(
-              "MetaMask is having issues with message signing. Please try using a different wallet like OKX, or update your MetaMask settings to enable message signing."
-            );
+            throw new Error("Your wallet does not support message signing");
           }
           throw new Error(`Failed to sign message: ${signError.message}`);
         }
@@ -121,6 +108,13 @@ export const useAuthService = () => {
       }
     },
   });
+
+  // Handle wallet disconnection
+  useEffect(() => {
+    if (!isConnected) {
+      logoutMutation.mutate();
+    }
+  }, [isConnected]);
 
   return {
     connectAndLogin: connectAndLoginMutation.mutateAsync,

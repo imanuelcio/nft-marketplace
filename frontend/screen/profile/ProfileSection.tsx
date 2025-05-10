@@ -1,10 +1,28 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Camera, User, Mail, Edit2 } from "lucide-react";
 import { useAccount } from "wagmi";
+import { getProfile } from "../../services/profile";
+import { formatDate } from "../../utils/dateFormat";
+
 const ProfileSection = () => {
   const { address } = useAccount();
+  const [profileData, setProfileData] = useState<any>(null);
+  console.log(profileData?.data);
+  const hookProfile = async () => {
+    try {
+      const profile = await getProfile(address as string);
+      setProfileData(profile);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    hookProfile();
+  }, [address]);
+
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -13,6 +31,15 @@ const ProfileSection = () => {
       transition: { duration: 0.5 },
     },
   };
+
+  // Add loading/null check
+  if (!profileData || !profileData.data) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="text-gray-400">Loading profile...</span>
+      </div>
+    );
+  }
 
   return (
     <motion.section
@@ -61,7 +88,8 @@ const ProfileSection = () => {
               <input
                 type="text"
                 id="name"
-                placeholder="Enter your name"
+                disabled={true}
+                placeholder={profileData.data.username}
                 className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
               />
             </div>
@@ -75,7 +103,8 @@ const ProfileSection = () => {
               <input
                 type="email"
                 id="email"
-                placeholder="Enter your email"
+                disabled={true}
+                placeholder={profileData.data.email}
                 className="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
               />
             </div>
@@ -87,7 +116,7 @@ const ProfileSection = () => {
                   Wallet Address
                 </label>
                 <div className="p-3 rounded-lg bg-gray-700 border border-gray-600 text-gray-300">
-                  {address}
+                  {profileData.data.wallet_address}
                 </div>
               </div>
               <div className="space-y-2">
@@ -95,7 +124,7 @@ const ProfileSection = () => {
                   Member Since
                 </label>
                 <div className="p-3 rounded-lg bg-gray-700 border border-gray-600 text-gray-300">
-                  March 2024
+                  {formatDate(profileData.data.created_at)}
                 </div>
               </div>
             </div>

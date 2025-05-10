@@ -14,27 +14,23 @@ const LoginPage = () => {
   const { address, isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const { connectAndLogin, isAuthLoading } = useAuthService();
-
-  // Handle auto login when wallet is connected
-  useEffect(() => {
-    const handleAutoLogin = async () => {
-      if (isConnected && address) {
-        try {
-          await connectAndLogin();
-        } catch (error) {
-          console.error("Auto login failed:", error);
-        }
+  const handleAutoLogin = async () => {
+    if (isConnected && address) {
+      try {
+        await connectAndLogin();
+      } catch (error) {
+        console.error("Auto login failed:", error);
       }
-    };
-
+    }
+  };
+  useEffect(() => {
     handleAutoLogin();
-  }, [isConnected, address, connectAndLogin]);
+  }, [!isConnected]);
 
-  // Test signing function
   const testSigning = async () => {
     try {
       console.log("Testing signing...");
-      const message = "Test message";
+      const message = "Hello from CIO!\nPlease sign this message to login";
       const signature = await signMessageAsync({ message });
       console.log("Test signature:", signature);
     } catch (error) {
@@ -42,12 +38,11 @@ const LoginPage = () => {
     }
   };
 
-  // Call test signing when component mounts
-  useEffect(() => {
-    if (isConnected) {
-      testSigning();
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (isConnected) {
+  //     testSigning();
+  //   }
+  // }, [isConnected]);
 
   return (
     <div className="flex items-center space-x-4">

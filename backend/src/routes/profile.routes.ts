@@ -8,5 +8,9 @@ import {
 const profileRouter = Router();
 
 profileRouter.get("/user/:idOrWallet", userController.getUserProfile);
-profileRouter.put("/user/:id", userController.updateUserProfile);
+profileRouter.put(
+  "/user/:id",
+
+  userController.updateUserProfile
+);
 export default profileRouter;
