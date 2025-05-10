@@ -1,15 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthService } from "../services/auth";
 import { toast } from "react-hot-toast";
 import { Search, ShoppingBag, User } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useSignMessage } from "wagmi";
 import "@rainbow-me/rainbowkit/styles.css";
 
 const LoginPage = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { address, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { connectAndLogin, isAuthLoading } = useAuthService();
+
+  // Handle auto login when wallet is connected
+  useEffect(() => {
+    const handleAutoLogin = async () => {
+      if (isConnected && address) {
+        try {
+          await connectAndLogin();
+        } catch (error) {
+          console.error("Auto login failed:", error);
+        }
+      }
+    };
+
+    handleAutoLogin();
+  }, [isConnected, address, connectAndLogin]);
+
+  // Test signing function
+  const testSigning = async () => {
+    try {
+      console.log("Testing signing...");
+      const message = "Test message";
+      const signature = await signMessageAsync({ message });
+      console.log("Test signature:", signature);
+    } catch (error) {
+      console.error("Test signing error:", error);
+    }
+  };
+
+  // Call test signing when component mounts
+  useEffect(() => {
+    if (isConnected) {
+      testSigning();
+    }
+  }, [isConnected]);
 
   return (
     <div className="flex items-center space-x-4">
@@ -59,8 +97,9 @@ const LoginPage = () => {
                         className="px-4 cursor-pointer py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-medium hover:opacity-90 transition-opacity text-white shadow-lg shadow-purple-500/20"
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
+                        disabled={isAuthLoading}
                       >
-                        Connect Wallet
+                        {isAuthLoading ? "Connecting..." : "Connect Wallet"}
                       </motion.button>
                     );
                   }
@@ -82,7 +121,7 @@ const LoginPage = () => {
                     <div className="flex items-center space-x-2">
                       <motion.button
                         onClick={openChainModal}
-                        className="flex  cursor-pointer items-center space-x-2 px-3 py-2 bg-gray-800/50 backdrop-blur-sm rounded-full hover:bg-gray-700/50 transition-colors border border-gray-700/50"
+                        className="flex cursor-pointer items-center space-x-2 px-3 py-2 bg-gray-800/50 backdrop-blur-sm rounded-full hover:bg-gray-700/50 transition-colors border border-gray-700/50"
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
                       >
@@ -223,8 +262,11 @@ const LoginPage = () => {
                                 className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-medium hover:opacity-90 transition-opacity text-white shadow-lg shadow-purple-500/20"
                                 whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.98 }}
+                                disabled={isAuthLoading}
                               >
-                                Connect Wallet
+                                {isAuthLoading
+                                  ? "Connecting..."
+                                  : "Connect Wallet"}
                               </motion.button>
                             );
                           }
