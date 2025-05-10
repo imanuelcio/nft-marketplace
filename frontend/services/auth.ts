@@ -1,78 +1,44 @@
-// auth.ts
 import { axiosInstance } from "../libs/axios";
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
 import { useMutation } from "@tanstack/react-query";
-import { injected } from "wagmi/connectors";
+import { getSigner } from "../libs/ethersClient";
 
 export const useAuthService = () => {
-  const { address, isConnected } = useAccount();
-  const { connectAsync, connectors } = useConnect();
-  const { disconnectAsync } = useDisconnect();
-  const { signMessageAsync, isSuccess } = useSignMessage();
-
   const connectAndLoginMutation = useMutation({
     mutationFn: async () => {
       try {
         console.log("Start Connecting wallet ...");
 
-        const injectedConnector = connectors.find(
-          (c) =>
-            c.id === "injected" || c.name.toLowerCase().includes("metamask")
-        );
+        const signer = await getSigner();
+        const walletAddress = await signer.getAddress();
+        console.log("Wallet address:", walletAddress);
 
-        if (!injectedConnector)
-          throw new Error("No injected connector found (MetaMask or similar)");
-
-        const connectResult = await connectAsync({
-          connector: injectedConnector,
-        });
-
-        const walletAddress = connectResult.accounts;
-        console.log(walletAddress);
-        if (!walletAddress) {
-          throw new Error("Failed to get wallet address after connect");
-        }
-
-        // Step 1: Get nonce from backend
-        console.log(`Requesting nonce from /auth/nonce/${walletAddress[0]}`);
+        // Step 1: Get nonce
         const nonceRes = await axiosInstance.get(
-          `/auth/nonce/${walletAddress[0]}`
+          `/auth/nonce/${walletAddress}`
         );
-        console.log("Nonce received:", nonceRes.data);
+        const nonce = nonceRes.data?.nonce;
+        if (!nonce) throw new Error("Invalid nonce received");
 
-        const nonce = nonceRes.data.nonce;
-        if (!nonce) {
-          console.error("No nonce received in response:", nonceRes.data);
-          throw new Error("Invalid nonce received from server");
-        }
+        // Step 2: Sign nonce
+        const message = `Login nonce ${nonce}`;
+        const signature = await signer.signMessage(message);
+        if (!signature) throw new Error("No signature returned");
 
-        console.log(`Signing message: "Login nonce ${nonce}"`);
-        const signature = await signMessageAsync({
-          message: `Login nonce ${nonce}`,
-        });
         console.log("Signature:", signature);
 
-        if (!signature) {
-          console.error("No signature was returned");
-          throw new Error("Failed to generate signature");
-        }
-        console.log("Sending verification request to /auth/verify");
-        console.log("Payload:", { walletAddress: walletAddress[0], signature });
-
+        // Step 3: Send to backend for verification
         const verifyRes = await axiosInstance.post(`/auth/verify`, {
-          walletAddress: walletAddress[0],
+          walletAddress,
           signature,
         });
 
-        console.log("Verification result:", verifyRes.data);
-
         return {
-          connectResult,
+          walletAddress,
           authResult: verifyRes.data,
         };
-      } catch (error) {
-        console.error("Authentication error:", error);
-        throw error; // Rethrow the specific error to preserve the message
+      } catch (err) {
+        console.error("Authentication error:", err);
+        throw err;
       }
     },
   });
@@ -80,33 +46,26 @@ export const useAuthService = () => {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       try {
-        console.log("Deleting cookie....");
+        console.log("Deleting session and disconnecting wallet...");
         await axiosInstance.post("/auth/logout");
-        console.log("Successfully deleted cookie");
-        console.log("Disconnecting wallet");
-        await disconnectAsync();
-        console.log("Wallet disconnected successfully");
+
+        // Optionally, clear any frontend state if you track wallet address
+        console.log("Logout successful");
         return true;
-      } catch (error) {
-        console.error("Error during logout:", error);
-        throw error;
+      } catch (err) {
+        console.error("Logout error:", err);
+        throw err;
       }
     },
   });
 
   return {
-    // Fungsi utama yang digabungkan
     connectAndLogin: connectAndLoginMutation.mutateAsync,
     isAuthLoading: connectAndLoginMutation.isPending,
     authError: connectAndLoginMutation.error,
     authData: connectAndLoginMutation.data,
 
-    // Tetap menyediakan fungsi logout
     logout: logoutMutation.mutateAsync,
     isLogoutLoading: logoutMutation.isPending,
-
-    // Informasi status
-    address,
-    isConnected,
   };
 };
